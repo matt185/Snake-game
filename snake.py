@@ -80,10 +80,12 @@ game_area.onkeypress(right_direction, "Right")
 while True:
     game_area.update()
 
+
     #when token hit
     if head.distance(token) < 20:
         #move it to different place
         token.goto(random.randint(-290, 290), random.randint(-290, 290))
+
 
         #add a part to the body
         new_part = turtle.Turtle()
@@ -91,7 +93,20 @@ while True:
         new_part.shape("square")
         new_part.color("violet")
         new_part.penup()
-        body_part.append(new_part)
+        body_part.append(new_part) 
+
+    #check boarder collision
+
+    if head.xcor() > 290 or head.xcor() < -290 or head.ycor() > 290 or head.ycor() < -290:
+        time.sleep(1)
+        head.goto(random.randint(-290, 290), random.randint(-290, 290))
+        head.direction = "stop"
+        #remove the piece from the screen
+        for part in body_part:
+            part.goto(1000, 1000)
+        body_part.clear()
+
+
     #rearrange the body    
     for index in range(len(body_part) - 1, 0, -1):
         x = body_part[index - 1].xcor()
@@ -103,8 +118,19 @@ while True:
     if len(body_part) > 0:
         body_part[0].goto (head.xcor(),head.ycor())
      
-        
     move()
+
+    # check for body collision
+
+    for part in body_part:
+        if part.distance(head) < 20:
+            time.sleep(1)
+            head.goto(random.randint(-290, 290), random.randint(-290, 290))
+            head.direction = "stop"
+            for part in body_part:
+                part.goto(1000, 1000)
+            body_part.clear()
+
     time.sleep(delay)
 game_area.mainloop()
 
